@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STEAM GAMES — Каталог</title>
+    <title>STEAM GAMES</title>
     <style>
-        /* Базовые стили страницы в темных тонах Steam */
         body {
-            font-family: 'Motiva Sans', Sans-serif, Arial, Helvetica;
+            font-family: 'Motiva Sans', Arial, sans-serif;
             background: radial-gradient(circle at top right, #1b2838 0%, #171a21 100%);
             color: #f3f3f3;
             margin: 0;
@@ -18,242 +17,188 @@
             min-height: 100vh;
         }
 
-        /* Заголовок сайта из вашего наброска */
         h1 {
             font-size: 3rem;
             letter-spacing: 4px;
             text-transform: uppercase;
             margin-bottom: 30px;
             color: #66c0f4;
-            text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.6);
+            text-shadow: 0 4px 8px rgba(0,0,0,0.6);
             border-bottom: 2px solid rgba(102, 192, 244, 0.2);
             padding-bottom: 10px;
             width: 100%;
-            max-width: 2040px; /* Рассчитано под 3 виджета в ряд */
+            max-width: 900px;
             text-align: center;
         }
 
-        /* Панель управления (Поиск и Кнопки) */
         .controls-panel {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 20px;
             width: 100%;
-            max-width: 2040px;
+            max-width: 900px;
             margin-bottom: 40px;
         }
 
-        /* Поисковая строка */
-        .search-input {
-            width: 100%;
-            max-width: 400px;
-            padding: 12px 20px;
-            font-size: 1rem;
-            background: #171a21;
-            border: 1px solid #2a475e;
-            border-radius: 25px;
-            color: #fff;
-            outline: none;
-            transition: border-color 0.2s;
-            text-align: center;
-        }
-
-        .search-input:focus {
-            border-color: #66c0f4;
-            box-shadow: 0 0 10px rgba(102, 192, 244, 0.3);
-        }
-
-        /* Блок фильтров */
-        .filter-container {
+        .games-list {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px;
-        }
-
-        /* Кнопки фильтров */
-        .filter-btn {
-            background: #2a475e;
-            color: #66c0f4;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            background: #66c0f4;
-            color: #171a21;
-            box-shadow: 0 0 12px rgba(102, 192, 244, 0.5);
-        }
-
-        /* СЕТКА ИГР — Строго 3 колонки по фиксированному размеру виджетов */
-        .games-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 25px;
-            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
             width: 100%;
-            max-width: 2040px; /* Вмещает ровно 3 карточки по 660px с отступами */
+            max-width: 900px;
         }
 
-        /* Карточка для игры */
         .game-card {
-            background: rgba(23, 26, 33, 0.85);
-            border: 1px solid rgba(42, 71, 94, 0.6);
-            border-radius: 8px;
-            padding: 10px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-            transition: transform 0.2s ease, border-color 0.2s ease;
-            width: 646px; /* Фиксированная ширина под размер оригинального виджета */
+            background: linear-gradient(to right, rgba(23, 26, 33, 0.9) 0%, rgba(42, 71, 94, 0.3) 100%);
+            border: 1px solid rgba(42, 71, 94, 0.4);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            transition: transform .2s, border-color .2s;
+            text-decoration: none;
+            color: inherit;
+            height: 120px;
         }
 
         .game-card:hover {
-            transform: translateY(-3px);
+            transform: translateX(4px);
             border-color: #66c0f4;
         }
 
-        /* Эффект скрытия карточки при фильтрации */
-        .game-card.hidden {
-            display: none;
+        .game-banner {
+            width: 250px;
+            height: 120px;
+            object-fit: cover;
+            flex-shrink: 0;
         }
 
-        /* Прямое отображение виджета без оберток, ломающих локальный просмотр */
-        .game-card iframe {
-            display: block;
-            border: none;
+        .game-info {
+            padding: 0 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        /* Стиль для пустых ячеек (6, 7, 8, 9) */
+        .game-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .game-tags {
+            font-size: .85rem;
+            color: #66c0f4;
+        }
+
+        .game-action {
+            padding-right: 24px;
+            display: flex;
+            align-items: center;
+        }
+
+        .steam-btn {
+            background: linear-gradient(to bottom, #a4e013 0%, #6b9906 100%);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: .95rem;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .game-card:hover .steam-btn {
+            background: linear-gradient(to bottom, #bfff13 0%, #82ba07 100%);
+        }
+
         .empty-card {
-            border: 2px dashed rgba(86, 100, 114, 0.4);
-            background: rgba(23, 26, 33, 0.4);
+            border: 2px dashed rgba(86, 100, 114, 0.3);
+            background: rgba(23, 26, 33, 0.2);
             color: #566472;
-            font-size: 1.2rem;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            height: 190px;
+            letter-spacing: 2px;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-sizing: border-box;
+            height: 120px;
+            border-radius: 4px;
         }
 
-        footer {
-            margin-top: 60px;
-            font-size: 0.85rem;
-            color: #566472;
+        @media (max-width:700px) {
+            .game-card { height: auto; flex-direction: column; text-align: center; padding-bottom: 15px; }
+            .game-banner { width: 100%; height: 140px; }
+            .game-info { padding: 15px 10px; }
+            .game-action { padding-right: 0; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Заголовок из вашего рисунка -->
     <h1>Steam Games</h1>
-    
-    <!-- Панель управления каталогом -->
+
     <div class="controls-panel">
-        <!-- Поиск по названию -->
-        <input type="text" class="search-input" id="searchBox" oninput="applyFilters()" placeholder="Поиск по названию игры...">
-
-        <!-- Фильтры по категориям/жанрам -->
-        <div class="filter-container">
-            <button class="filter-btn active" onclick="filterGenre('all', this)">Все игры</button>
-            <button class="filter-btn" onclick="filterGenre('simulators', this)">Симуляторы</button>
-            <button class="filter-btn" onclick="filterGenre('indie', this)">Инди</button>
-            <button class="filter-btn" onclick="filterGenre('soon', this)">Скоро</button>
-        </div>
-    </div>
-    
-    <!-- Сетка из карточек -->
-    <div class="games-grid">
-
-        <!-- ЯЧЕЙКА 1: Police Simulator -->
-        <div class="game-card" data-genre="simulators" data-title="Police Simulator Patrol Officers">
-            <iframe src="https://steampowered.com" width="646" height="190"></iframe>
-        </div>
-
-        <!-- ЯЧЕЙКА 2: Car Mechanic -->
-        <div class="game-card" data-genre="simulators" data-title="Car Mechanic Simulator">
-            <iframe src="https://steampowered.com" width="646" height="190"></iframe>
-        </div>
-
-        <!-- ЯЧЕЙКА 3: Moonshiner -->
-        <div class="game-card" data-genre="simulators" data-title="Moonshiner Simulator Самогонщик">
-            <iframe src="https://steampowered.com" width="646" height="190"></iframe>
-        </div>
-
-        <!-- ЯЧЕЙКА 4: MECCHA CHAMELEON -->
-        <div class="game-card" data-genre="indie" data-title="MECCHA CHAMELEON">
-            <iframe src="https://steampowered.com" width="646" height="190"></iframe>
-        </div>
-
-        <!-- ЯЧЕЙКА 5: Пятый проект -->
-        <div class="game-card" data-genre="indie" data-title="Секретный проект">
-            <iframe src="https://steampowered.com" width="646" height="190"></iframe>
-        </div>
-
-        <!-- ЯЧЕЙКА 6 (Заглушка) -->
-        <div class="game-card empty-card" data-genre="soon" data-title="Скоро 6">
-            <span>6. Скоро анонс</span>
-        </div>
-
-        <!-- ЯЧЕЙКА 7 (Заглушка) -->
-        <div class="game-card empty-card" data-genre="soon" data-title="Скоро 7">
-            <span>7. Скоро анонс</span>
-        </div>
-
-        <!-- ЯЧЕЙКА 8 (Заглушка) -->
-        <div class="game-card empty-card" data-genre="soon" data-title="Скоро 8">
-            <span>8. Скоро анонс</span>
-        </div>
-
-        <!-- ЯЧЕЙКА 9 (Заглушка) -->
-        <div class="game-card empty-card" data-genre="soon" data-title="Скоро 9">
-            <span>9. Скоро анонс</span>
-        </div>
-
+        <p style="color: #8497a5; margin: 0;">Актуальный каталог проектов нашей студии</p>
     </div>
 
-    <footer>
-        &copy; 2026 Игровой Каталог. Все виджеты работают локально.
-    </footer>
+    <div class="games-list">
+        <!-- ИГРА 1 -->
+        <a class="game-card" href="https://steampowered.com" target="_blank">
+            <img class="game-banner" src="https://steamstatic.com" alt="Police">
+            <div class="game-info">
+                <div class="game-name">Police Simulator: Patrol Officers</div>
+                <div class="game-tags">Симулятор, Патрулирование, Реализм</div>
+            </div>
+            <div class="game-action"><div class="steam-btn">В магазин</div></div>
+        </a>
 
-    <!-- Скрипты фильтрации и поиска (совместимы с локальным запуском) -->
-    <script>
-        let currentGenre = 'all';
+        <!-- ИГРА 2 -->
+        <a class="game-card" href="https://steampowered.com" target="_blank">
+            <img class="game-banner" src="https://steamstatic.com" alt="Car">
+            <div class="game-info">
+                <div class="game-name">Car Mechanic Simulator</div>
+                <div class="game-tags">Автосимулятор, Настройка автомобиля, Мастерская</div>
+            </div>
+            <div class="game-action"><div class="steam-btn">В магазин</div></div>
+        </a>
 
-        function filterGenre(genre, button) {
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            currentGenre = genre;
-            applyFilters();
-        }
+        <!-- ИГРА 3 -->
+        <a class="game-card" href="https://steampowered.com" target="_blank">
+            <img class="game-banner" src="https://steamstatic.com" alt="Moon">
+            <div class="game-info">
+                <div class="game-name">Moonshiner Simulator</div>
+                <div class="game-tags">Крафтинг, Экономика, Менеджмент, Самогонщик</div>
+            </div>
+            <div class="game-action"><div class="steam-btn">В магазин</div></div>
+        </a>
 
-        function applyFilters() {
-            const searchText = document.getElementById('searchBox').value.toLowerCase();
+        <!-- ИГРА 4 -->
+        <a class="game-card" href="https://steampowered.com" target="_blank">
+            <img class="game-banner" src="https://steamstatic.com" alt="Cham">
+            <div class="game-info">
+                <div class="game-name">MECCHA CHAMELEON</div>
+                <div class="game-tags">Казуальная игра, Экшен, Стелс, 3D</div>
+            </div>
+            <div class="game-action"><div class="steam-btn">В магазин</div></div>
+        </a>
 
-            document.querySelectorAll('.game-card').forEach(card => {
-                const cardGenre = card.getAttribute('data-genre');
-                const cardTitle = card.getAttribute('data-title').toLowerCase();
+        <!-- ИГРА 5 -->
+        <a class="game-card" href="https://steampowered.com" target="_blank">
+            <img class="game-banner" src="https://steamstatic.com" alt="Proj">
+            <div class="game-info">
+                <div class="game-name">Секретный Проект</div>
+                <div class="game-tags">Экшен, Приключение, Рогалик</div>
+            </div>
+            <div class="game-action"><div class="steam-btn">В магазин</div></div>
+        </a>
 
-                const matchesGenre = (currentGenre === 'all' || cardGenre === currentGenre);
-                const matchesSearch = cardTitle.includes(searchText);
-
-                if (matchesGenre && matchesSearch) {
-                    card.classList.remove('hidden');
-                } else {
-                    card.classList.add('hidden');
-                }
-            });
-        }
-    </script>
+        <!-- ЗАГЛУШКА -->
+        <div class="empty-card">6. Скоро анонс нового проекта</div>
+    </div>
 
 </body>
 </html>
