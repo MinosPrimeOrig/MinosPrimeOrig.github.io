@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STEAM GAMES — Каталог</title>
+    <style>
+        /* Базовые стили страницы в темных тонах Steam */
+        body {
+            font-family: 'Motiva Sans', Sans-serif, Arial, Helvetica;
+            background: radial-gradient(circle at top right, #1b2838 0%, #171a21 100%);
+            color: #f3f3f3;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Заголовок сайта из вашего наброска */
+        h1 {
+            font-size: 3rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            color: #66c0f4;
+            text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.6);
+            border-bottom: 2px solid rgba(102, 192, 244, 0.2);
+            padding-bottom: 10px;
+            width: 100%;
+            max-width: 2040px; /* Рассчитано под 3 виджета в ряд */
+            text-align: center;
+        }
+
+        /* Панель управления (Поиск и Кнопки) */
+        .controls-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 2040px;
+            margin-bottom: 40px;
+        }
+
+        /* Поисковая строка */
+        .search-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            background: #171a21;
+            border: 1px solid #2a475e;
+            border-radius: 25px;
+            color: #fff;
+            outline: none;
+            transition: border-color 0.2s;
+            text-align: center;
+        }
+
+        .search-input:focus {
+            border-color: #66c0f4;
+            box-shadow: 0 0 10px rgba(102, 192, 244, 0.3);
+        }
+
+        /* Блок фильтров */
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        /* Кнопки фильтров */
+        .filter-btn {
+            background: #2a475e;
+            color: #66c0f4;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #66c0f4;
+            color: #171a21;
+            box-shadow: 0 0 12px rgba(102, 192, 244, 0.5);
+        }
+
+        /* СЕТКА ИГР — Строго 3 колонки по фиксированному размеру виджетов */
+        .games-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            width: 100%;
+            max-width: 2040px; /* Вмещает ровно 3 карточки по 660px с отступами */
+        }
+
+        /* Карточка для игры */
+        .game-card {
+            background: rgba(23, 26, 33, 0.85);
+            border: 1px solid rgba(42, 71, 94, 0.6);
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            width: 646px; /* Фиксированная ширина под размер оригинального виджета */
+        }
+
+        .game-card:hover {
+            transform: translateY(-3px);
+            border-color: #66c0f4;
+        }
+
+        /* Эффект скрытия карточки при фильтрации */
+        .game-card.hidden {
+            display: none;
+        }
+
+        /* Прямое отображение виджета без оберток, ломающих локальный просмотр */
+        .game-card iframe {
+            display: block;
+            border: none;
+        }
+
+        /* Стиль для пустых ячеек (6, 7, 8, 9) */
+        .empty-card {
+            border: 2px dashed rgba(86, 100, 114, 0.4);
+            background: rgba(23, 26, 33, 0.4);
+            color: #566472;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            height: 190px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        footer {
+            margin-top: 60px;
+            font-size: 0.85rem;
+            color: #566472;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Заголовок из вашего рисунка -->
+    <h1>Steam Games</h1>
+    
+    <!-- Панель управления каталогом -->
+    <div class="controls-panel">
+        <!-- Поиск по названию -->
+        <input type="text" class="search-input" id="searchBox" oninput="applyFilters()" placeholder="Поиск по названию игры...">
+
+        <!-- Фильтры по категориям/жанрам -->
+        <div class="filter-container">
+            <button class="filter-btn active" onclick="filterGenre('all', this)">Все игры</button>
+            <button class="filter-btn" onclick="filterGenre('simulators', this)">Симуляторы</button>
+            <button class="filter-btn" onclick="filterGenre('indie', this)">Инди</button>
+            <button class="filter-btn" onclick="filterGenre('soon', this)">Скоро</button>
+        </div>
+    </div>
+    
+    <!-- Сетка из карточек -->
+    <div class="games-grid">
+
+        <!-- ЯЧЕЙКА 1: Police Simulator -->
+        <div class="game-card" data-genre="simulators" data-title="Police Simulator Patrol Officers">
+            <iframe src="https://steampowered.com" width="646" height="190"></iframe>
+        </div>
+
+        <!-- ЯЧЕЙКА 2: Car Mechanic -->
+        <div class="game-card" data-genre="simulators" data-title="Car Mechanic Simulator">
+            <iframe src="https://steampowered.com" width="646" height="190"></iframe>
+        </div>
+
+        <!-- ЯЧЕЙКА 3: Moonshiner -->
+        <div class="game-card" data-genre="simulators" data-title="Moonshiner Simulator Самогонщик">
+            <iframe src="https://steampowered.com" width="646" height="190"></iframe>
+        </div>
+
+        <!-- ЯЧЕЙКА 4: MECCHA CHAMELEON -->
+        <div class="game-card" data-genre="indie" data-title="MECCHA CHAMELEON">
+            <iframe src="https://steampowered.com" width="646" height="190"></iframe>
+        </div>
+
+        <!-- ЯЧЕЙКА 5: Пятый проект -->
+        <div class="game-card" data-genre="indie" data-title="Секретный проект">
+            <iframe src="https://steampowered.com" width="646" height="190"></iframe>
+        </div>
+
+        <!-- ЯЧЕЙКА 6 (Заглушка) -->
+        <div class="game-card empty-card" data-genre="soon" data-title="Скоро 6">
+            <span>6. Скоро анонс</span>
+        </div>
+
+        <!-- ЯЧЕЙКА 7 (Заглушка) -->
+        <div class="game-card empty-card" data-genre="soon" data-title="Скоро 7">
+            <span>7. Скоро анонс</span>
+        </div>
+
+        <!-- ЯЧЕЙКА 8 (Заглушка) -->
+        <div class="game-card empty-card" data-genre="soon" data-title="Скоро 8">
+            <span>8. Скоро анонс</span>
+        </div>
+
+        <!-- ЯЧЕЙКА 9 (Заглушка) -->
+        <div class="game-card empty-card" data-genre="soon" data-title="Скоро 9">
+            <span>9. Скоро анонс</span>
+        </div>
+
+    </div>
+
+    <footer>
+        &copy; 2026 Игровой Каталог. Все виджеты работают локально.
+    </footer>
+
+    <!-- Скрипты фильтрации и поиска (совместимы с локальным запуском) -->
+    <script>
+        let currentGenre = 'all';
+
+        function filterGenre(genre, button) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            currentGenre = genre;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const searchText = document.getElementById('searchBox').value.toLowerCase();
+
+            document.querySelectorAll('.game-card').forEach(card => {
+                const cardGenre = card.getAttribute('data-genre');
+                const cardTitle = card.getAttribute('data-title').toLowerCase();
+
+                const matchesGenre = (currentGenre === 'all' || cardGenre === currentGenre);
+                const matchesSearch = cardTitle.includes(searchText);
+
+                if (matchesGenre && matchesSearch) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
